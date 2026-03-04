@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI 视频检测器</title>
+  <link rel="stylesheet" href="/static/css/style.css" />
+</head>
+<body>
+  <div class="container">
+
+    <!-- Header -->
+    <header class="header">
+      <div class="header__logo">
+        <span class="header__icon">&#x1F50D;</span>
+        <h1 class="header__title">AI 视频检测器</h1>
+      </div>
+      <p class="header__subtitle">上传视频，检测是否由 AI 生成（Deepfake）</p>
+    </header>
+
+    <!-- Upload Card -->
+    <section class="card upload-card" id="uploadCard">
+      <div class="drop-zone" id="dropZone">
+        <div class="drop-zone__icon">&#x1F4F9;</div>
+        <p class="drop-zone__text">拖拽视频到这里，或</p>
+        <label class="btn btn--primary" for="fileInput">选择视频文件</label>
+        <input
+          type="file"
+          id="fileInput"
+          accept=".mp4,.avi,.mov,.mkv,.webm"
+          hidden
+        />
+        <p class="drop-zone__hint">支持 MP4 / AVI / MOV / MKV / WebM，最大 100 MB</p>
+      </div>
+
+      <!-- File preview -->
+      <div class="file-preview" id="filePreview" hidden>
+        <span class="file-preview__icon">&#x1F4C4;</span>
+        <span class="file-preview__name" id="fileName"></span>
+        <span class="file-preview__size" id="fileSize"></span>
+        <button class="btn btn--ghost btn--sm" id="clearBtn" title="移除">&#x2715;</button>
+      </div>
+
+      <!-- Progress -->
+      <div class="progress-wrap" id="progressWrap" hidden>
+        <div class="progress-bar">
+          <div class="progress-bar__fill" id="progressFill"></div>
+        </div>
+        <p class="progress-label" id="progressLabel">上传中…</p>
+      </div>
+
+      <!-- Submit -->
+      <button class="btn btn--primary btn--full" id="submitBtn" disabled>
+        开始检测
+      </button>
+    </section>
+
+    <!-- Result Card -->
+    <section class="card result-card" id="resultCard" hidden>
+      <h2 class="result-card__title">检测结果</h2>
+
+      <div class="result-layout">
+        <!-- Gauge -->
+        <div class="gauge-wrap">
+          <svg class="gauge" viewBox="0 0 200 120" xmlns="http://www.w3.org/2000/svg">
+            <!-- background arc -->
+            <path class="gauge__bg"
+              d="M 20 110 A 90 90 0 0 1 180 110"
+              fill="none" stroke="#2a2a3e" stroke-width="18" stroke-linecap="round"/>
+            <!-- value arc -->
+            <path class="gauge__fill" id="gaugeArc"
+              d="M 20 110 A 90 90 0 0 1 180 110"
+              fill="none" stroke-width="18" stroke-linecap="round"
+              stroke-dasharray="283" stroke-dashoffset="283"/>
+          </svg>
+          <div class="gauge__label">
+            <span class="gauge__percent" id="gaugePercent">0%</span>
+            <span class="gauge__sub">AI 生成概率</span>
+          </div>
+        </div>
+
+        <!-- Details -->
+        <div class="result-details">
+          <div class="verdict" id="verdictBadge">—</div>
+          <table class="detail-table">
+            <tbody>
+              <tr>
+                <td>文件名</td>
+                <td id="detailFilename">—</td>
+              </tr>
+              <tr>
+                <td>置信度</td>
+                <td id="detailConfidence">—</td>
+              </tr>
+              <tr>
+                <td>分析帧数</td>
+                <td id="detailFrames">—</td>
+              </tr>
+              <tr>
+                <td>模型模式</td>
+                <td id="detailMode">—</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <!-- Frame scores -->
+          <div class="frame-scores" id="frameScoresWrap">
+            <p class="frame-scores__title">逐帧分数</p>
+            <div class="frame-scores__bars" id="frameScoresBars"></div>
+          </div>
+        </div>
+      </div>
+
+      <button class="btn btn--ghost btn--full" id="resetBtn">重新检测</button>
+    </section>
+
+    <!-- Error Toast -->
+    <div class="toast toast--error" id="errorToast" hidden>
+      <span id="errorMsg"></span>
+      <button class="toast__close" id="toastClose">&#x2715;</button>
+    </div>
+
+    <footer class="footer">
+      <p>Powered by EfficientNet-B4 · FastAPI · OpenCV</p>
+    </footer>
+
+  </div>
+
+  <script src="/static/js/upload.js"></script>
+</body>
+</html>
